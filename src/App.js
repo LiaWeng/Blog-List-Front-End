@@ -23,7 +23,7 @@ const App = () => {
       setBlogs(blogs)
     })
   }, [])
-  
+
   useEffect(() => {
     const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'))
 
@@ -48,7 +48,7 @@ const App = () => {
           'loggedUser', JSON.stringify(savedUser)
         )
       })
-      .catch(error => {
+      .catch(() => {
         addMessage('incorrect username or password', 'red')
       })
   }
@@ -69,7 +69,7 @@ const App = () => {
     blogService
       .update(updatedBlog, blogId)
       .then(savedBlog => {
-        const newBlogs = blogs.map(blog => 
+        const newBlogs = blogs.map(blog =>
           blog.id === savedBlog.id ? savedBlog : blog
         )
         setBlogs(newBlogs)
@@ -103,9 +103,9 @@ const App = () => {
           </Togglable>
 
           <Message message={message} messageColor={messageColor} />
-          <Blogs blogs={blogs} user={user} updateLike={updateLike} deleteBlog={deleteBlog} /> 
+          <Blogs blogs={blogs} user={user} updateLike={updateLike} deleteBlog={deleteBlog} />
         </div>
-      }   
+      }
     </div>
   )
 }
