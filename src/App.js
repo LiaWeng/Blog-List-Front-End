@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
-import Login from './components/Login'
+import LoginForm from './components/LoginForm'
 import LoginStatus from './components/LoginStatus'
 import Message from './components/Message'
-import CreateNew from './components/CreateNew'
-import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
+import Blogs from './components/Blogs'
+import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
+import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
-  const [messageColor, setMessageColor] = useState('green')
+  const [messageColor, setMessageColor] = useState('white')
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -35,18 +39,71 @@ const App = () => {
     setTimeout(() => setMessageColor('white'), 5000)
   }
 
+  const createUser = ({ credentials }) => {
+    loginService
+      .login(credentials)
+      .then(savedUser => {
+        setUser(savedUser)
+        window.localStorage.setItem(
+          'loggedUser', JSON.stringify(savedUser)
+        )
+      })
+      .catch(error => {
+        addMessage('incorrect username or password', 'red')
+      })
+  }
+
+  const createBlog = (newBlog) => {
+    blogFormRef.current.toggleVisibility()
+    const token = blogService.setConfig(user.token)
+
+    blogService
+      .create(newBlog, token)
+      .then(savedBlog => {
+        setBlogs(blogs.concat(savedBlog))
+        addMessage(`added ${savedBlog.title} -- ${savedBlog.author}`, 'green')
+      })
+  }
+
+  const updateLike = (updatedBlog, blogId) => {
+    blogService
+      .update(updatedBlog, blogId)
+      .then(savedBlog => {
+        const newBlogs = blogs.map(blog => 
+          blog.id === savedBlog.id ? savedBlog : blog
+        )
+        setBlogs(newBlogs)
+        addMessage(`updated ${savedBlog.title} -- ${savedBlog.author}`, 'green')
+      })
+  }
+
+  const deleteBlog = (blogId) => {
+    const token = blogService.setConfig(user.token)
+
+    blogService
+      .remove(blogId, token)
+      .then(() => {
+        const newBlogs = blogs.filter(blog => blog.id !== blogId)
+        setBlogs(newBlogs)
+      })
+  }
+
   return (
     <div>
       {user === null ?
         <div>
-          <Login setUser={setUser} addMessage={addMessage} />
+          <LoginForm createUser={createUser}/>
           <Message message={message} messageColor={messageColor} />
         </div> :
         <div>
           <LoginStatus user={user} setUser={setUser} />
-          <CreateNew user={user} blogs={blogs} setBlogs={setBlogs} addMessage={addMessage} />
+
+          <Togglable label={'add new blog'} ref={blogFormRef}>
+            <BlogForm createBlog={createBlog} />
+          </Togglable>
+
           <Message message={message} messageColor={messageColor} />
-          <Blog blogs={blogs} user={user} />
+          <Blogs blogs={blogs} user={user} updateLike={updateLike} deleteBlog={deleteBlog} /> 
         </div>
       }   
     </div>

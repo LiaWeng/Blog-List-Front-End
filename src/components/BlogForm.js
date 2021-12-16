@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 
-const CreateNew = ({ user, blogs, setBlogs, addMessage }) => {
+const CreateNew = ({ createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const handleCreateNew = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault()
 
     const newBlog = {
       title: title,
@@ -15,10 +14,7 @@ const CreateNew = ({ user, blogs, setBlogs, addMessage }) => {
       url: url
     }
 
-    const token = 'bearer ' + user.token
-    const response = await blogService.create(newBlog, token)
-    setBlogs(blogs.concat(response))
-    addMessage(`added ${title} -- ${author}`, 'green')
+    await createBlog(newBlog)
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -27,13 +23,13 @@ const CreateNew = ({ user, blogs, setBlogs, addMessage }) => {
   return (
     <div>
       <h2>Add new blogs</h2>
-      <form onSubmit={handleCreateNew}>
+      <form onSubmit={handleSubmit}>
         <div>
           title
           <input
             type='text'
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={({ target }) => setTitle(target.value)}
           />
         </div>
         <div>
@@ -41,7 +37,7 @@ const CreateNew = ({ user, blogs, setBlogs, addMessage }) => {
           <input
             type='text'
             value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
@@ -49,7 +45,7 @@ const CreateNew = ({ user, blogs, setBlogs, addMessage }) => {
           <input
             type='text'
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={({ target }) => setUrl(target.value)}
           />
         </div>
         <button type='submit'>add</button>
