@@ -9,6 +9,10 @@ const Blog = ({ blog, updateLike, deleteBlog }) => {
     paddingBottom: '10px'
   }
 
+  const blogDetailStyle = {
+    display: showDetail ? '' : 'none'
+  }
+
   const handleLike = async () => {
     const updatedBlog = {
       title: blog.title,
@@ -30,25 +34,41 @@ const Blog = ({ blog, updateLike, deleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      <div>
+    <div className='blogItem' style={blogStyle}>
+      <div className='blogInfo'>
         {blog.title} -- {blog.author}
-        <button onClick={() => {setShowDetail(!showDetail)}}>
+        <button
+          className='viewButton'
+          onClick={() => {setShowDetail(!showDetail)}}
+        >
           {showDetail ? 'hide' : 'view'}
         </button>
-        <button onClick={() => {handleDelete(blog.id)}}>delete</button>
+        <button
+          className='deleteButton'
+          onClick={() => {handleDelete(blog.id)}}
+        >
+          delete
+        </button>
       </div>
 
-      {showDetail ?
+      <div className='blogDetail' style={blogDetailStyle}>
+        <div>{blog.url}</div>
         <div>
+          likes <span className='numberOfLikes'>{blog.likes}</span>
+          <button className='likeButton' onClick={handleLike}>like</button>
+        </div>
+      </div>
+
+      {/* {showDetail ?
+        <div className='blogDetail'>
           <div>{blog.url}</div>
           <div>
-            likes {blog.likes}
-            <button onClick={handleLike}>like</button>
+            likes <span className='numberOfLikes'>{blog.likes}</span>
+            <button className='likeButton' onClick={handleLike}>like</button>
           </div>
         </div> :
-        <div></div>
-      }
+        null
+      } */}
     </div>
   )
 }

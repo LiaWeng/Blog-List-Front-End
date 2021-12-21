@@ -5,7 +5,7 @@ const baseUrl = 'http://localhost:3003/api/blogs'
 const setConfig = (tokenString) => {
   const token = 'bearer ' + tokenString
 
-  return { headers: {Authorization: token} }
+  return { headers: { Authorization: token } }
 }
 
 const getAll = async () => {
@@ -24,7 +24,6 @@ const update = async (newBlog, blogId) => {
 }
 
 const remove = async (blogId, config) => {
-
   await axios.delete(`${baseUrl}/${blogId}`, config)
 }
 

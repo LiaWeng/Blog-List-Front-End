@@ -1,3 +1,5 @@
+import React from 'react'
+
 const LoginStatus = ({ user, setUser }) => {
   const handleLogOut = () => {
     window.localStorage.clear()
@@ -6,7 +8,7 @@ const LoginStatus = ({ user, setUser }) => {
 
   return (
     <div>
-      {user.name} logged in &nbsp; 
+      {user.name} logged in &nbsp;
       <button onClick={handleLogOut}>log out</button>
     </div>
   )

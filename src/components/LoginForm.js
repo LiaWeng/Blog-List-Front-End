@@ -9,7 +9,7 @@ const Login = ({ createUser }) => {
 
     const credentials = { username, password }
 
-    await createUser({credentials})
+    await createUser({ credentials })
     setUsername('')
     setPassword('')
   }
@@ -21,6 +21,7 @@ const Login = ({ createUser }) => {
         <div>
           username
           <input
+            id='username'
             type='text'
             value={username}
             onChange={({ target }) => setUsername(target.value)}
@@ -29,12 +30,13 @@ const Login = ({ createUser }) => {
         <div>
           password
           <input
+            id='password'
             type='password'
             value={password}
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type='submit'>
+        <button id='loginButton' type='submit'>
           login
         </button>
       </form>

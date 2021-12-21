@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const CreateNew = ({ createBlog }) => {
+const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -23,10 +23,12 @@ const CreateNew = ({ createBlog }) => {
   return (
     <div>
       <h2>Add new blogs</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} role='form'>
         <div>
           title
           <input
+            data-testid='title'
+            id='title'
             type='text'
             value={title}
             onChange={({ target }) => setTitle(target.value)}
@@ -35,6 +37,8 @@ const CreateNew = ({ createBlog }) => {
         <div>
           author
           <input
+            data-testid='author'
+            id='author'
             type='text'
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
@@ -43,15 +47,17 @@ const CreateNew = ({ createBlog }) => {
         <div>
           url
           <input
+            data-testid='url'
+            id='url'
             type='text'
             value={url}
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button type='submit'>add</button>
+        <button id='addBlogButton' type='submit'>add</button>
       </form>
     </div>
   )
 }
 
-export default CreateNew
+export default BlogForm

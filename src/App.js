@@ -55,10 +55,10 @@ const App = () => {
 
   const createBlog = (newBlog) => {
     blogFormRef.current.toggleVisibility()
-    const token = blogService.setConfig(user.token)
+    const config = blogService.setConfig(user.token)
 
     blogService
-      .create(newBlog, token)
+      .create(newBlog, config)
       .then(savedBlog => {
         setBlogs(blogs.concat(savedBlog))
         addMessage(`added ${savedBlog.title} -- ${savedBlog.author}`, 'green')
@@ -78,13 +78,16 @@ const App = () => {
   }
 
   const deleteBlog = (blogId) => {
-    const token = blogService.setConfig(user.token)
+    const config = blogService.setConfig(user.token)
 
     blogService
-      .remove(blogId, token)
+      .remove(blogId, config)
       .then(() => {
         const newBlogs = blogs.filter(blog => blog.id !== blogId)
         setBlogs(newBlogs)
+      })
+      .catch(() => {
+        addMessage('cannot delete this blog', 'red')
       })
   }
 
@@ -103,7 +106,7 @@ const App = () => {
           </Togglable>
 
           <Message message={message} messageColor={messageColor} />
-          <Blogs blogs={blogs} user={user} updateLike={updateLike} deleteBlog={deleteBlog} />
+          <Blogs blogs={blogs} updateLike={updateLike} deleteBlog={deleteBlog} />
         </div>
       }
     </div>
