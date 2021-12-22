@@ -58,17 +58,6 @@ const Blog = ({ blog, updateLike, deleteBlog }) => {
           <button className='likeButton' onClick={handleLike}>like</button>
         </div>
       </div>
-
-      {/* {showDetail ?
-        <div className='blogDetail'>
-          <div>{blog.url}</div>
-          <div>
-            likes <span className='numberOfLikes'>{blog.likes}</span>
-            <button className='likeButton' onClick={handleLike}>like</button>
-          </div>
-        </div> :
-        null
-      } */}
     </div>
   )
 }
