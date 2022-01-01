@@ -1,20 +1,34 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { addBlogAction } from '../../reducers/blogReducer'
+import { messageAction } from '../../reducers/messageReducer'
+import blogService from '../../services/blogs'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ blogFormRef, user }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
+  const dispatch = useDispatch()
+
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url
+    if (title === '' || url === '') {
+      dispatch(messageAction('Must have title or url', 'FAIL'))
+    } else {
+      const newBlog = {
+        title: title,
+        author: author,
+        url: url
+      }
+
+      blogFormRef.current.toggleVisibility()
+      const config = blogService.setConfig(user.token)
+
+      dispatch(addBlogAction(newBlog, config))
     }
 
-    await createBlog(newBlog)
     setTitle('')
     setAuthor('')
     setUrl('')

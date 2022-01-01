@@ -1,6 +1,10 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-const Message = ({ message, messageColor }) => {
+const Message = () => {
+  const message = useSelector(state => state.message.content)
+  const messageColor = useSelector(state => state.message.color)
+
   const style = {
     color: messageColor,
     border: `1px solid ${messageColor}`

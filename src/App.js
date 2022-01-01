@@ -1,112 +1,64 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import LoginForm from './components/LoginForm'
-import LoginStatus from './components/LoginStatus'
 import Message from './components/Message'
-import BlogForm from './components/BlogForm'
-import Blogs from './components/Blogs'
-import Togglable from './components/Togglable'
+import Navigation from './components/Navigation/Navigation'
+import Homepage from './components/Homepage/Homepage'
+import Users from './components/Users'
+import IndividualUser from './components/IndividualUser'
+import IndividualBlog from './components/IndividualBlog/IndividualBlog'
 
-import blogService from './services/blogs'
-import loginService from './services/login'
+import userService from './services/users'
+
+import { useSelector, useDispatch } from 'react-redux'
+import { initializeBlogAction } from './reducers/blogReducer'
+
+import { Routes, Route } from 'react-router-dom'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)
-  const [messageColor, setMessageColor] = useState('white')
+  const [users, setUsers] = useState([])
 
-  const blogFormRef = useRef()
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
+  const message = useSelector(state => state.message)
+  const blogs = useSelector(state => state.blogs)
 
   useEffect(() => {
-    blogService.getAll().then(blogs => {
-      setBlogs(blogs)
-    })
+    dispatch(initializeBlogAction())
   }, [])
 
   useEffect(() => {
     const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'))
 
     if (loggedUser) {
-      setUser(loggedUser)
+      dispatch({
+        type: 'LOGIN',
+        data: loggedUser
+      })
     }
   }, [])
 
-  const addMessage = (message, color) => {
-    setMessage(message)
-    setMessageColor(color)
-    setTimeout(() => setMessage(null), 5000)
-    setTimeout(() => setMessageColor('white'), 5000)
-  }
-
-  const createUser = ({ credentials }) => {
-    loginService
-      .login(credentials)
-      .then(savedUser => {
-        setUser(savedUser)
-        window.localStorage.setItem(
-          'loggedUser', JSON.stringify(savedUser)
-        )
-      })
-      .catch(() => {
-        addMessage('incorrect username or password', 'red')
-      })
-  }
-
-  const createBlog = (newBlog) => {
-    blogFormRef.current.toggleVisibility()
-    const config = blogService.setConfig(user.token)
-
-    blogService
-      .create(newBlog, config)
-      .then(savedBlog => {
-        setBlogs(blogs.concat(savedBlog))
-        addMessage(`added ${savedBlog.title} -- ${savedBlog.author}`, 'green')
-      })
-  }
-
-  const updateLike = (updatedBlog, blogId) => {
-    blogService
-      .update(updatedBlog, blogId)
-      .then(savedBlog => {
-        const newBlogs = blogs.map(blog =>
-          blog.id === savedBlog.id ? savedBlog : blog
-        )
-        setBlogs(newBlogs)
-        addMessage(`updated ${savedBlog.title} -- ${savedBlog.author}`, 'green')
-      })
-  }
-
-  const deleteBlog = (blogId) => {
-    const config = blogService.setConfig(user.token)
-
-    blogService
-      .remove(blogId, config)
-      .then(() => {
-        const newBlogs = blogs.filter(blog => blog.id !== blogId)
-        setBlogs(newBlogs)
-      })
-      .catch(() => {
-        addMessage('cannot delete this blog', 'red')
-      })
-  }
+  useEffect(() => {
+    userService
+      .getUsers()
+      .then(users => {setUsers(users)})
+  }, [])
 
   return (
     <div>
       {user === null ?
         <div>
-          <LoginForm createUser={createUser}/>
-          <Message message={message} messageColor={messageColor} />
+          <LoginForm />
+          {message && <Message />}
         </div> :
         <div>
-          <LoginStatus user={user} setUser={setUser} />
-
-          <Togglable label={'add new blog'} ref={blogFormRef}>
-            <BlogForm createBlog={createBlog} />
-          </Togglable>
-
-          <Message message={message} messageColor={messageColor} />
-          <Blogs blogs={blogs} updateLike={updateLike} deleteBlog={deleteBlog} />
+          <Navigation user={user} />
+          <Routes>
+            <Route path='/' element={<Homepage message={message} user={user} blogs={blogs} />}/>
+            <Route path='/users' element={<Users users={users} />} />
+            <Route path='/users/:userId' element={<IndividualUser users={users} />} />
+            <Route path='blogs/:blogId' element={<IndividualBlog blogs={blogs} users={users} />} />
+          </Routes>
         </div>
       }
     </div>

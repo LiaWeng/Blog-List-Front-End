@@ -1,15 +1,19 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { loginAction } from '../reducers/loginReducer'
 
-const Login = ({ createUser }) => {
+const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const dispatch = useDispatch()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
 
     const credentials = { username, password }
 
-    await createUser({ credentials })
+    dispatch(loginAction(credentials))
     setUsername('')
     setPassword('')
   }

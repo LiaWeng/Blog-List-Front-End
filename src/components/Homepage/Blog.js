@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { deleteBlogAction } from '../../reducers/blogReducer'
 
-const Blog = ({ blog, updateLike, deleteBlog }) => {
+const Blog = ({ blog }) => {
   const [showDetail, setShowDetail] = useState(false)
+  const dispatch = useDispatch()
 
   const blogStyle = {
     borderBottom: '0.5px solid black',
@@ -9,27 +12,11 @@ const Blog = ({ blog, updateLike, deleteBlog }) => {
     paddingBottom: '10px'
   }
 
-  const blogDetailStyle = {
-    display: showDetail ? '' : 'none'
-  }
-
-  const handleLike = async () => {
-    const updatedBlog = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-      user: blog.user
-    }
-
-    await updateLike(updatedBlog, blog.id)
-  }
-
-  const handleDelete = async (blogId) => {
+  const handleDelete = (blogId) => {
     const result = window.confirm(`Delete ${blog.title}?`)
 
     if (result) {
-      await deleteBlog(blogId)
+      dispatch(deleteBlogAction(blogId))
     }
   }
 
@@ -49,14 +36,6 @@ const Blog = ({ blog, updateLike, deleteBlog }) => {
         >
           delete
         </button>
-      </div>
-
-      <div className='blogDetail' style={blogDetailStyle}>
-        <div>{blog.url}</div>
-        <div>
-          likes <span className='numberOfLikes'>{blog.likes}</span>
-          <button className='likeButton' onClick={handleLike}>like</button>
-        </div>
       </div>
     </div>
   )
