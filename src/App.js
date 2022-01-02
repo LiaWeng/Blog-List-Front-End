@@ -1,8 +1,9 @@
+/* eslint-disable react-redux/useSelector-prefer-selectors */
 import React, { useEffect, useState } from 'react'
 
 import LoginForm from './components/LoginForm'
 import Message from './components/Message'
-import Navigation from './components/Navigation/Navigation'
+import Navigation from './components/Navigation'
 import Homepage from './components/Homepage/Homepage'
 import Users from './components/Users'
 import IndividualUser from './components/IndividualUser'
@@ -14,6 +15,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { initializeBlogAction } from './reducers/blogReducer'
 
 import { Routes, Route } from 'react-router-dom'
+
+import Container from '@mui/material/Container'
 
 const App = () => {
   const [users, setUsers] = useState([])
@@ -45,7 +48,7 @@ const App = () => {
   }, [])
 
   return (
-    <div>
+    <Container style={{ width: '80%' }}>
       {user === null ?
         <div>
           <LoginForm />
@@ -61,7 +64,7 @@ const App = () => {
           </Routes>
         </div>
       }
-    </div>
+    </Container>
   )
 }
 

@@ -4,7 +4,10 @@ import { addBlogAction } from '../../reducers/blogReducer'
 import { messageAction } from '../../reducers/messageReducer'
 import blogService from '../../services/blogs'
 
-const BlogForm = ({ blogFormRef, user }) => {
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+
+const BlogForm = ({ user, toggleVisibility }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -15,7 +18,7 @@ const BlogForm = ({ blogFormRef, user }) => {
     event.preventDefault()
 
     if (title === '' || url === '') {
-      dispatch(messageAction('Must have title or url', 'FAIL'))
+      dispatch(messageAction('Must have title and url', 'FAIL'))
     } else {
       const newBlog = {
         title: title,
@@ -23,7 +26,7 @@ const BlogForm = ({ blogFormRef, user }) => {
         url: url
       }
 
-      blogFormRef.current.toggleVisibility()
+      toggleVisibility()
       const config = blogService.setConfig(user.token)
 
       dispatch(addBlogAction(newBlog, config))
@@ -36,11 +39,13 @@ const BlogForm = ({ blogFormRef, user }) => {
 
   return (
     <div>
-      <h2>Add new blogs</h2>
+      <h3>Add new blogs</h3>
       <form onSubmit={handleSubmit} role='form'>
         <div>
-          title
-          <input
+          <TextField
+            label='Title'
+            style={{ width: 500, marginBottom: 10, marginTop: -10 }}
+            variant='standard'
             data-testid='title'
             id='title'
             type='text'
@@ -49,8 +54,10 @@ const BlogForm = ({ blogFormRef, user }) => {
           />
         </div>
         <div>
-          author
-          <input
+          <TextField
+            label='Author'
+            style={{ width: 500, marginBottom: 10 }}
+            variant='standard'
             data-testid='author'
             id='author'
             type='text'
@@ -59,8 +66,10 @@ const BlogForm = ({ blogFormRef, user }) => {
           />
         </div>
         <div>
-          url
-          <input
+          <TextField
+            label='Url'
+            style={{ width: 500, marginBottom: 20 }}
+            variant='standard'
             data-testid='url'
             id='url'
             type='text'
@@ -68,7 +77,21 @@ const BlogForm = ({ blogFormRef, user }) => {
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button id='addBlogButton' type='submit'>add</button>
+        <Button
+          variant='contained'
+          disableElevation
+          id='addBlogButton'
+          type='submit'
+        >
+          add blog
+        </Button>
+        <Button
+          variant='outlined'
+          style={{ marginLeft: 20 }}
+          onClick={toggleVisibility}
+        >
+          cancel
+        </Button>
       </form>
     </div>
   )

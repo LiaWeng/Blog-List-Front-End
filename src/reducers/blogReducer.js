@@ -8,7 +8,11 @@ const blogReducer = (state = [], action) => {
     case 'ADD':
       return state.concat(action.data)
     case 'UPDATE': {
-      return action.data
+      const newBlogs = state.map(blog =>
+        blog.id === action.data.id ? action.data : blog
+      )
+
+      return newBlogs
     }
     default: return state
   }
@@ -36,18 +40,13 @@ export const addBlogAction = (newBlog, config) => {
 }
 
 export const updateBlogAction = (updatedBlog, blogId) => {
-  return async (dispatch, getState) => {
-    const { blogs } = getState()
+  return async (dispatch) => {
     const savedBlog = await blogService.update(updatedBlog, blogId)
-    const newBlogs = blogs.map(blog =>
-      blog.id === blogId ? savedBlog : blog
-    )
 
     dispatch({
       type: 'UPDATE',
-      data: newBlogs
+      data: savedBlog
     })
-    dispatch(messageAction(`updated ${savedBlog.title} -- ${savedBlog.author}`, 'SUCCESS'))
   }
 }
 

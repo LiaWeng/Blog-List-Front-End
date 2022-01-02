@@ -3,12 +3,12 @@ const messageReducer = (state = {}, action) => {
     case 'SUCCESS':
       return {
         content: action.data,
-        color: 'green'
+        severity: 'success'
       }
     case 'FAIL':
       return {
         content: action.data,
-        color: 'red'
+        severity: 'error'
       }
     case 'NO_MESSAGE':
       return null
