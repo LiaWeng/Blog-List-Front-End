@@ -22,7 +22,7 @@ const LoginStatus = ({ user }) => {
         style={{ color: 'white', borderColor: 'white', marginLeft: 30 }}
         onClick={handleLogOut}
       >
-        log out
+        Log out
       </Button>
     </div>
   )

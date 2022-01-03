@@ -9,28 +9,24 @@ import Button from '@mui/material/Button'
 const Navigation = ({ user }) => {
   return (
     <AppBar position='static' style={{ marginBottom: 30 }}>
-      <Toolbar style={{ justifyContent: 'space-between' }}>
-        <div>
-          <Button
-            style={{ color: 'white' }}
-            component={Link}
-            to='/'
-          >
-            blogs
-          </Button>
-          <Button
-            style={{ color: 'white', marginLeft: 20 }}
-            component={Link}
-            to='/users'
-          >
-            users
-          </Button>
-        </div>
-        <div>
-          <LoginStatus
-            user={user}
-          />
-        </div>
+      <Toolbar style={{ justifyContent: 'space-around' }}>
+        <Button
+          style={{ color: 'white' }}
+          component={Link}
+          to='/'
+        >
+          blogs
+        </Button>
+        <Button
+          style={{ color: 'white', marginLeft: 20 }}
+          component={Link}
+          to='/users'
+        >
+          users
+        </Button>
+        <LoginStatus
+          user={user}
+        />
       </Toolbar>
     </AppBar>
   )

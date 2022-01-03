@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 
 import LoginForm from './components/LoginForm'
-import Message from './components/Message'
 import Navigation from './components/Navigation'
 import Homepage from './components/Homepage/Homepage'
 import Users from './components/Users'
@@ -51,16 +50,16 @@ const App = () => {
     <Container style={{ width: '80%' }}>
       {user === null ?
         <div>
-          <LoginForm />
-          {message && <Message />}
+          <LoginForm message={message}/>
         </div> :
         <div>
           <Navigation user={user} />
           <Routes>
             <Route path='/' element={<Homepage message={message} user={user} blogs={blogs} />}/>
+            {/* <Route path='/login' element={<LoginForm message={message}/>} /> */}
             <Route path='/users' element={<Users users={users} />} />
             <Route path='/users/:userId' element={<IndividualUser users={users} />} />
-            <Route path='blogs/:blogId' element={<IndividualBlog blogs={blogs} users={users} />} />
+            <Route path='/blogs/:blogId' element={<IndividualBlog blogs={blogs} users={users} />} />
           </Routes>
         </div>
       }

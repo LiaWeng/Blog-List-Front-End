@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { loginAction } from '../reducers/loginReducer'
 
+import Message from './Message'
+
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
-const Login = () => {
+const Login = ({ message }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -56,6 +58,7 @@ const Login = () => {
           login
         </Button>
       </form>
+      {message && <Message />}
     </div>
   )
 }

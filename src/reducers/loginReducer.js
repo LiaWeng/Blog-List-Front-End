@@ -24,7 +24,7 @@ export const loginAction = (credentials) => {
         'loggedUser', JSON.stringify(loggedUser)
       )
     } catch (error) {
-      dispatch(messageAction('invalid username or password', 'FAIL'))
+      dispatch(messageAction('Invalid username or password', 'FAIL'))
     }
   }
 }
